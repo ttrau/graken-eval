@@ -1,0 +1,155 @@
+Processing /home/ift/Projects/graken-eval2
+Building wheels for collected packages: graken-eval
+  Building wheel for graken-eval (setup.py): started
+  Building wheel for graken-eval (setup.py): finished with status 'done'
+  Created wheel for graken-eval: filename=graken_eval-0.1-py3-none-any.whl size=20650 sha256=2133dc768bb47df08e405f58daf81481082e46137402fd5fc07edc9ddff7b56e
+  Stored in directory: /home/ift/.cache/pip/wheels/e8/80/e6/ee896b66874434e63219bf5a193a6c3cad6e0f6aff7d55762f
+Successfully built graken-eval
+Installing collected packages: graken-eval
+  Attempting uninstall: graken-eval
+    Found existing installation: graken-eval 0.1
+    Uninstalling graken-eval-0.1:
+      Successfully uninstalled graken-eval-0.1
+Successfully installed graken-eval-0.1
+graken-eval -I thesis/graken-extended.graph
+thesis/graken-extended.graph
+(Cmd) source AuxiliaryDrives.Off ClampingSystem.Unclamped EmergencyStop.Triggered FrontDoor.Opened HandlingKeyswitch.Off MachiningTable.Empty NumericalControl.Stopped OperationMode.Jog RobotGripper.Clamped RobotLoad.Occupied SideDoor.Closed TransferPosition.NotReached WorkpieceHandling.Outside
+(Cmd) subgoal clear
+(Cmd) subgoal add WorkpieceHandling.Putting
+(Cmd) subgoal add WorkpieceHandling.Retracting
+(Cmd) goal MachiningTable.Occupied RobotLoad.Empty WorkpieceHandling.Outside
+(Cmd) search_parallel_path
+Distance: 18
+(Cmd) draw_visitor thesis/goal-loading.svg
+[0]
+ | 
+===--EmergencyStop.Normal
+ | 
+===--HandlingKeyswitch.On
+ | 
+[1]--[OperationMode.Auto]
+ | 
+===--OperationMode.Auto
+ | 
+===--FrontDoor.Intermediate
+ | 
+===--FrontDoor.Closed
+ | 
+===--TransferPosition.Reached
+ | 
+[2]--[SideDoor.Open]
+ | 
+===--SideDoor.Intermediate
+ | 
+[3]--[SideDoor.Open]
+ | 
+===--SideDoor.Opened
+ | 
+[4]--[WorkpieceHandling.Put]
+ | 
+===--WorkpieceHandling.Putting
+ | 
+===--WorkpieceHandling.Table
+ | 
+===--MachiningTable.Occupied
+ | 
+[5]--[ClampingSystem.Close]
+ | 
+===--ClampingSystem.Intermediate
+ | 
+[6]--[ClampingSystem.Close]
+ | 
+===--ClampingSystem.Clamped
+ | 
+[7]--[RobotGripper.Open]
+ | 
+===--RobotGripper.Intermediate
+ | 
+[8]--[RobotGripper.Open]
+ | 
+===--RobotGripper.Unclamped
+ | 
+[9]--[WorkpieceHandling.Retract]
+ | 
+===--WorkpieceHandling.Retracting
+ | 
+===--RobotLoad.Empty
+ | 
+===--WorkpieceHandling.Outside
+(Cmd) follow_visitor
+(Cmd) subgoal clear
+(Cmd) goal NumericalControl.Finished
+(Cmd) search_parallel_path
+Distance: 5
+(Cmd) draw_visitor thesis/goal-machining.svg
+[0]
+ | 
+[1]--[SideDoor.Close]
+ | 
+===--SideDoor.Intermediate
+ | 
+[2]--[SideDoor.Close]
+ | 
+===--SideDoor.Closed
+ | 
+[3]--[AuxiliaryDrives.TurnOn]
+ | 
+===--AuxiliaryDrives.On
+ | 
+[4]--[NumericalControl.Start]
+ | 
+===--NumericalControl.Running
+ | 
+===--NumericalControl.Finished
+(Cmd) follow_visitor
+(Cmd) subgoal clear
+(Cmd) subgoal add WorkpieceHandling.Approaching
+(Cmd) subgoal add WorkpieceHandling.Lifting
+(Cmd) goal MachiningTable.Empty RobotLoad.Occupied WorkpieceHandling.Outside
+(Cmd) search_parallel_path
+Distance: 12
+(Cmd) draw_visitor thesis/goal-unloading.svg
+[0]
+ | 
+[1]--[SideDoor.Open]
+ | 
+===--SideDoor.Intermediate
+ | 
+[2]--[SideDoor.Open]
+ | 
+===--SideDoor.Opened
+ | 
+[3]--[WorkpieceHandling.Approach]
+ | 
+===--WorkpieceHandling.Approaching
+ | 
+===--WorkpieceHandling.Table
+ | 
+[4]--[ClampingSystem.Open]
+ | 
+===--ClampingSystem.Intermediate
+ | 
+[5]--[ClampingSystem.Open]
+ | 
+===--ClampingSystem.Unclamped
+ | 
+[6]--[RobotGripper.Close]
+ | 
+===--RobotGripper.Intermediate
+ | 
+[7]--[RobotGripper.Close]
+ | 
+===--RobotGripper.Clamped
+ | 
+[8]--[WorkpieceHandling.Lift]
+ | 
+===--WorkpieceHandling.Lifting
+ | 
+===--MachiningTable.Empty
+ | 
+===--RobotLoad.Occupied
+ | 
+===--WorkpieceHandling.Outside
+(Cmd) follow_visitor
+(Cmd) subgoal clear
+(Cmd) exit

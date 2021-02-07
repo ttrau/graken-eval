@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+import os
+from sys import argv
+from subprocess import Popen, PIPE
+import signal
+
+os.system('pip3 install .')
+
+filename = argv[1] if len(argv) > 1 else 'ts/graken.graph'
+bi = 'graken-eval'
+print(bi,'-I',filename)
+p = Popen([bi,'-I',filename], stdout=PIPE, stdin=PIPE, shell=False)
+
+def on_exit():
+  p.terminate()
+
+signal.signal(signal.SIGINT, on_exit)
+signal.signal(signal.SIGTERM, on_exit)
+
+def cmd(*args):
+  data = ''
+  while '(Cmd) ' not in data:
+    data += p.stdout.read(1).decode()
+    lines = data.split('\n')
+    if len(lines) > 1:
+      print(lines[0])
+      data = lines[1]
+  print('(Cmd)',' '.join(args))
+  p.stdin.write(str.encode(' '.join(args)+'\n'))
+  p.stdin.flush()
+
+source = 'AuxiliaryDrives.Off ClampingSystem.Unclamped EmergencyStop.Triggered FrontDoor.Opened HandlingKeyswitch.Off MachiningTable.Empty NumericalControl.Stopped OperationMode.Jog RobotGripper.Clamped RobotLoad.Occupied SideDoor.Closed TransferPosition.NotReached WorkpieceHandling.Outside'
+
+subgoals = [['WorkpieceHandling.Putting'],['WorkpieceHandling.Retracting']]
+goal = ['MachiningTable.Occupied','RobotLoad.Empty','WorkpieceHandling.Outside']
+
+subgoals2 = []
+goal2 = ['NumericalControl.Finished']
+
+subgoals3 = [['WorkpieceHandling.Approaching'],['WorkpieceHandling.Lifting']]
+goal3 = ['MachiningTable.Empty','RobotLoad.Occupied','WorkpieceHandling.Outside']
+
+cmd('source',source)
+cmd('subgoal','clear')
+for subgoal in subgoals:
+  cmd('subgoal','add',*subgoal)
+cmd('goal',*goal)
+#cmd('goal','ClampingSystem.Clamped SideDoor.Opened NumericalControl.Stopped FrontDoor.Closed AuxiliaryDrives.On EmergencyStop.Normal HandlingKeyswitch.On OperationMode.Auto TransferPosition.Reached MachiningTable.Occupied RobotGripper.Unclamped RobotLoad.Empty WorkpieceHandling.Outside')
+cmd('search_parallel_path')
+cmd('draw_visitor','ts/goal-loading.svg')
+cmd('follow_visitor')
+cmd('subgoal','clear')
+for subgoal in subgoals2:
+  cmd('subgoal','add',*subgoal)
+cmd('goal',*goal2)
+cmd('search_parallel_path')
+cmd('draw_visitor','ts/goal-machining.svg')
+cmd('follow_visitor')
+cmd('subgoal','clear')
+for subgoal in subgoals3:
+  cmd('subgoal','add',*subgoal)
+cmd('goal',*goal3)
+cmd('search_parallel_path')
+cmd('draw_visitor','ts/goal-unloading.svg')
+cmd('follow_visitor')
+cmd('subgoal','clear')
+cmd('exit')
+p.stdin.close()
+p.terminate()
