@@ -4,4 +4,4 @@ __pycache__/
 build/
 dist/
 graph-tool
-thesis/*.graph
+ts/*.graph
